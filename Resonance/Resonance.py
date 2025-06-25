@@ -3,6 +3,12 @@ Resonance: real-time spectral feedback
 
 TODO
 -----
+- updating frame_size or sampling_rate on GUI causes system to freeze
+- LPC order also needs to be constrained, because past a certain point it also causes system to freeze (b/c it's too high relative to sampling rate). This could be capped at the highest feasible value for fs/frame_size directly in the button toggle.
+- might be best to either fix them or provide a reset button (or auto-reset if changing those values)
+
+NOTES
+-----
 - note: threshold is very important; 0.05 works much better for than 0.01, as it seems to pick up more of the resonance rather than the details that cause big shifts
 - if you want continuous real-time feedback then a lower threshold is better (0.01), if you want more stable resonances for sustained vowels then a higher threshold is beter (0.05) -> will obviously depend on mic settings
 - Note that the GUI (at least in app mode) allows you to drag the axes if you want the y-axis to be bigger or smaller (very cool)
@@ -25,7 +31,7 @@ params = {
     "fs": 10000,  # fs = 10000 is ok
     "frame_size": 1024,  # 1024 is pretty good (2048 quite slow, 512 too jittery and rapid)
     "lpc_order": 12,  # will need changing (if 10,000 Hz then 8-10 F, 10-12 M)
-    "rms_threshold": 0.05,
+    "rms_threshold": 0.03,
 }
 
 
@@ -79,14 +85,14 @@ controls = QtWidgets.QWidget()
 controls_layout = QtWidgets.QVBoxLayout(controls)
 
 # Add collapsible toggle button
-toggle_btn = QtWidgets.QPushButton("Hide Controls")
-
+toggle_btn = QtWidgets.QPushButton("Show Controls")
+toggle_btn.setFixedHeight(30)  # Smaller height
+toggle_btn.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
 
 def toggle_controls():
     visible = controls_group.isVisible()
     controls_group.setVisible(not visible)
     toggle_btn.setText("Show Controls" if visible else "Hide Controls")
-
 
 toggle_btn.clicked.connect(toggle_controls)
 controls_layout.addWidget(toggle_btn)
@@ -94,6 +100,9 @@ controls_layout.addWidget(toggle_btn)
 # Group box to hold control widgets
 controls_group = QtWidgets.QGroupBox("Parameters")
 controls_group_layout = QtWidgets.QFormLayout(controls_group)
+
+# Hide by default
+controls_group.setVisible(False)
 
 
 """
