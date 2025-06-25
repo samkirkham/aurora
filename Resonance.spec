@@ -4,7 +4,7 @@
 a = Analysis(
     ['Resonance/Resonance.py'],
     pathex=[],
-    binaries=[],
+    binaries=[('/opt/homebrew/Cellar/portaudio/19.7.0/lib/libportaudio.2.dylib', '.')],
     datas=[],
     hiddenimports=[],
     hookspath=[],
