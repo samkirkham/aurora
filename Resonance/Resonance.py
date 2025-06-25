@@ -5,6 +5,7 @@ TODO
 -----
 - note: threshold is very important; 0.05 works much better for than 0.01, as it seems to pick up more of the resonance rather than the details that cause big shifts
 - if you want continuous real-time feedback then a lower threshold is better (0.01), if you want more stable resonances for sustained vowels then a higher threshold is beter (0.05) -> will obviously depend on mic settings
+- Note that the GUI (at least in app mode) allows you to drag the axes if you want the y-axis to be bigger or smaller (very cool)
 """
 
 import numpy as np
