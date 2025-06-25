@@ -3,4 +3,4 @@
 # - but the app doesn't seem to take any audio input!
 # - not a priority for now, just focus on getting the actual python version working properly
 
-pyinstaller --onefile --windowed Resonance.py
+pyinstaller --onefile --windowed Resonance/Resonance.py
