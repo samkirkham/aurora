@@ -154,9 +154,33 @@ input_devices = [d for d in sd.query_devices() if d["max_input_channels"] > 0]
 device_dropdown.addItems([f"{i}: {d['name']}" for i, d in enumerate(input_devices)])
 selected_device_index = [0]  # Store in a list so it can be mutated
 
+def restart_stream():
+    """ Function to restart stream when changing audio input device """
+    global stream
+    try:
+        if stream:
+            stream.stop()
+            stream.close()
+    except Exception as e:
+        print("Error stopping stream:", e)
+
+    try:
+        selected_device = input_devices[selected_device_index[0]]["name"]
+        stream = sd.InputStream(
+            device=selected_device,
+            callback=process_audio,
+            channels=1,
+            samplerate=params["fs"],
+            blocksize=params["frame_size"],
+        )
+        stream.start()
+        print(f"Stream restarted with device: {selected_device}")
+    except Exception as e:
+        print("Error starting stream:", e)
 
 def change_device(index):
     selected_device_index[0] = index
+    restart_stream()
 
 
 device_dropdown.currentIndexChanged.connect(change_device)
@@ -248,14 +272,16 @@ Start audio stream and run GUI
 # Start audio stream
 
 selected_device = input_devices[selected_device_index[0]]["name"]
-stream = sd.InputStream(
-    device=selected_device,
-    callback=process_audio,
-    channels=1,
-    samplerate=params["fs"],
-    blocksize=params["frame_size"],
-)
-stream.start()
+# this block is now inside restart_stream() -> can delete
+#stream = sd.InputStream(
+#    device=selected_device,
+#    callback=process_audio,
+#    channels=1,
+#    samplerate=params["fs"],
+#    blocksize=params["frame_size"],
+#)
+stream = None
+restart_stream()
 
 # Qt timer to keep GUI responsive
 timer = QtCore.QTimer()
