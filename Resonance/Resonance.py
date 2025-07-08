@@ -25,7 +25,7 @@ import sys
 import pickle
 
 """
-Load pre-computed lookup dictionary from file (created by Resonance/build_model.py)
+Load pre-computed formants-to-tongue shape lookup dictionary from file (created by Resonance/build_model.py)
 """
 
 with open("Resonance/tongue_model.pkl", "rb") as f:
