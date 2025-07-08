@@ -89,24 +89,27 @@ for line in formant_lines:
 Add visualization panel + update function for estimated tongue shape
 """
 
-# get min/max values of tongue shape to set plot axes
+# get min/max values of tongue shape to set plot axes
 all_points = np.vstack(list(tongue_lookup.values()))
 x_min, x_max = np.min(all_points[:, 0]), np.max(all_points[:, 0])
 y_min, y_max = np.min(all_points[:, 1]), np.max(all_points[:, 1])
 
 # plot tongue shape
-tongue_plot = plot_widget.addPlot(title="") # optional title
+tongue_plot = plot_widget.addPlot(title="")  # optional title
 tongue_plot.setXRange(x_min, x_max)
 tongue_plot.setYRange(y_min, y_max)
-tongue_plot.setAspectLocked(True) # False allows you to reorient the window better, but not ideal!
+tongue_plot.setAspectLocked(
+    True
+)  # False allows you to reorient the window better, but not ideal!
 tongue_plot.setMouseEnabled(x=False, y=False)
-tongue_curve = tongue_plot.plot(pen=pg.mkPen('black', width=7))
+tongue_curve = tongue_plot.plot(pen=pg.mkPen("black", width=7))
+
 
 def update_tongue(formant_freqs):
-    """ Function for real-time tongue plot update """
+    """Function for real-time tongue plot update"""
     f1_rounded = int(round(formant_freqs[0] / 10.0) * 10)  # Assuming 10Hz steps in data
     f2_rounded = int(round(formant_freqs[1] / 10.0) * 10)
-    tongue_points = tongue_lookup.get((f1_rounded, f2_rounded)) # lookup from dict
+    tongue_points = tongue_lookup.get((f1_rounded, f2_rounded))  # lookup from dict
     if tongue_points is not None:
         tongue_curve.setData(tongue_points[:, 0], tongue_points[:, 1])
 
@@ -125,10 +128,12 @@ toggle_btn = QtWidgets.QPushButton("Show Controls")
 toggle_btn.setFixedHeight(30)  # Smaller height
 toggle_btn.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
 
+
 def toggle_controls():
     visible = controls_group.isVisible()
     controls_group.setVisible(not visible)
     toggle_btn.setText("Show Controls" if visible else "Hide Controls")
+
 
 toggle_btn.clicked.connect(toggle_controls)
 controls_layout.addWidget(toggle_btn)
@@ -200,8 +205,9 @@ input_devices = [d for d in sd.query_devices() if d["max_input_channels"] > 0]
 device_dropdown.addItems([f"{i}: {d['name']}" for i, d in enumerate(input_devices)])
 selected_device_index = [0]  # Store in a list so it can be mutated
 
+
 def restart_stream():
-    """ Function to restart stream when changing audio input device """
+    """Function to restart stream when changing audio input device"""
     global stream
     try:
         if stream:
@@ -223,6 +229,7 @@ def restart_stream():
         print(f"Stream restarted with device: {selected_device}")
     except Exception as e:
         print("Error starting stream:", e)
+
 
 def change_device(index):
     selected_device_index[0] = index
@@ -252,7 +259,7 @@ render window with main display and controls
 controls_layout.addWidget(controls_group)
 layout.addWidget(controls, stretch=1)
 
-main_window.setWindowTitle("Resonance: Real-Time Formant Biofeedback")
+main_window.setWindowTitle("Resonance: Real-Time Formant and Articulatory Biofeedback")
 main_window.resize(1200, 700)
 main_window.show()
 
@@ -304,7 +311,7 @@ def process_audio(indata, frames, time, status):
                 formant_freqs = np.sort(formant_freqs)[
                     :4
                 ]  # sort by freq. + return 4 fms
-                
+
                 # update spectrum + tongue plots
                 update_spectrum(spectrum, formant_freqs)
                 update_tongue(formant_freqs)
@@ -321,13 +328,13 @@ Start audio stream and run GUI
 
 selected_device = input_devices[selected_device_index[0]]["name"]
 # this block is now inside restart_stream() -> can delete
-#stream = sd.InputStream(
+# stream = sd.InputStream(
 #    device=selected_device,
 #    callback=process_audio,
 #    channels=1,
 #    samplerate=params["fs"],
 #    blocksize=params["frame_size"],
-#)
+# )
 stream = None
 restart_stream()
 
