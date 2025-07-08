@@ -95,10 +95,10 @@ x_min, x_max = np.min(all_points[:, 0]), np.max(all_points[:, 0])
 y_min, y_max = np.min(all_points[:, 1]), np.max(all_points[:, 1])
 
 # plot tongue shape
-tongue_plot = plot_widget.addPlot(title="Tongue Shape") # optional title
+tongue_plot = plot_widget.addPlot(title="") # optional title
 tongue_plot.setXRange(x_min, x_max)
 tongue_plot.setYRange(y_min, y_max)
-tongue_plot.setAspectLocked(True)
+tongue_plot.setAspectLocked(True) # False allows you to reorient the window better, but not ideal!
 tongue_plot.setMouseEnabled(x=False, y=False)
 tongue_curve = tongue_plot.plot(pen=pg.mkPen('black', width=7))
 
