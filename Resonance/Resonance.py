@@ -22,6 +22,15 @@ import pyqtgraph as pg
 from pyqtgraph.Qt import QtWidgets, QtCore
 from collections import deque
 import sys
+import pickle
+
+"""
+Load pre-computed lookup dictionary from file (created by Resonance/build_model.py)
+"""
+
+with open("Resonance/tongue_model.pkl", "rb") as f:
+    tongue_lookup = pickle.load(f)
+
 
 """
 Default parameters
@@ -74,6 +83,33 @@ formant_lines = [
 ]
 for line in formant_lines:
     plot.addItem(line)
+
+
+"""
+Add visualization panel + update function for estimated tongue shape
+"""
+
+# get min/max values of tongue shape to set plot axes
+all_points = np.vstack(list(tongue_lookup.values()))
+x_min, x_max = np.min(all_points[:, 0]), np.max(all_points[:, 0])
+y_min, y_max = np.min(all_points[:, 1]), np.max(all_points[:, 1])
+
+# plot tongue shape
+tongue_plot = plot_widget.addPlot(title="Tongue Shape") # optional title
+tongue_plot.setXRange(x_min, x_max)
+tongue_plot.setYRange(y_min, y_max)
+tongue_plot.setAspectLocked(True)
+tongue_plot.setMouseEnabled(x=False, y=False)
+tongue_curve = tongue_plot.plot(pen=pg.mkPen('black', width=7))
+
+def update_tongue(formant_freqs):
+    """ Function for real-time tongue plot update """
+    f1_rounded = int(round(formant_freqs[0] / 10.0) * 10)  # Assuming 10Hz steps in data
+    f2_rounded = int(round(formant_freqs[1] / 10.0) * 10)
+    tongue_points = tongue_lookup.get((f1_rounded, f2_rounded)) # lookup from dict
+    if tongue_points is not None:
+        tongue_curve.setData(tongue_points[:, 0], tongue_points[:, 1])
+
 
 """
 Add option to change parameter settings in real-time
@@ -229,7 +265,7 @@ Audio processing and plot update
 audio_buffer = deque(maxlen=params["frame_size"])
 
 
-def update_plot(spectrum, formant_freqs):
+def update_spectrum(spectrum, formant_freqs):
     curve.setData(freq_axis, spectrum)
     # Update formant lines positions or hide if no formant
     for i in range(4):
@@ -268,8 +304,10 @@ def process_audio(indata, frames, time, status):
                 formant_freqs = np.sort(formant_freqs)[
                     :4
                 ]  # sort by freq. + return 4 fms
-                # update plot
-                update_plot(spectrum, formant_freqs)
+                
+                # update spectrum + tongue plots
+                update_spectrum(spectrum, formant_freqs)
+                update_tongue(formant_freqs)
 
     except Exception as e:
         print("LPC error:", repr(e))
