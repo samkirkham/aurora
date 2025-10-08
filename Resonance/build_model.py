@@ -28,5 +28,5 @@ for (f1, f2), group in tongue_shapes_m.group_by(["f1_num", "f2_num"]):
     tongue_lookup_m[(f1, f2)] = points
 
 # save as pickle
-with open("tongue_model_m.pkl", "wb") as f:
+with open("Resonance/tongue_model_m.pkl", "wb") as f:
     pickle.dump(tongue_lookup_m, f)
