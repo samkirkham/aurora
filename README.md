@@ -30,13 +30,6 @@ poetry install
 poetry shell
 ```
 
-### 3. Install Additional Dependencies
-
-The project requires several packages that need to be added to the Poetry configuration:
-
-```bash
-poetry add sounddevice scipy librosa pyqtgraph polars
-```
 
 ## Usage
 
