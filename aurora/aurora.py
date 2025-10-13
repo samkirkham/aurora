@@ -96,7 +96,7 @@ y_min, y_max = np.min(all_points[:, 1]), np.max(all_points[:, 1])
 
 # plot tongue shape
 tongue_plot = plot_widget.addPlot(title="")  # optional title
-tongue_plot.setXRange(x_min, x_max)
+tongue_plot.setXRange(-x_max, -x_min)
 tongue_plot.setYRange(y_min, y_max)
 tongue_plot.setAspectLocked(
     True
@@ -111,7 +111,7 @@ def update_tongue(formant_freqs):
     f2_rounded = int(round(formant_freqs[1] / 10.0) * 10)
     tongue_points = tongue_lookup.get((f1_rounded, f2_rounded))  # lookup from dict
     if tongue_points is not None:
-        tongue_curve.setData(tongue_points[:, 0], tongue_points[:, 1])
+        tongue_curve.setData(-tongue_points[:, 0], tongue_points[:, 1])
 
 
 """
