@@ -259,7 +259,7 @@ render window with main display and controls
 controls_layout.addWidget(controls_group)
 layout.addWidget(controls, stretch=1)
 
-main_window.setWindowTitle("Resonance: Real-Time Formant and Articulatory Biofeedback")
+main_window.setWindowTitle("AURORA")
 main_window.resize(1200, 700)
 main_window.show()
 
