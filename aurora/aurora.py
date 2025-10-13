@@ -1,5 +1,5 @@
 """
-Resonance: real-time spectral feedback
+AURORA: real-time spectral feedback
 
 TODO
 -----
@@ -25,10 +25,10 @@ import sys
 import pickle
 
 """
-Load pre-computed formants-to-tongue shape lookup dictionary from file (created by Resonance/build_model.py)
+Load pre-computed formants-to-tongue shape lookup dictionary from file (created by aurora/build_model.py)
 """
 
-with open("Resonance/tongue_model.pkl", "rb") as f:
+with open("aurora/tongue_model.pkl", "rb") as f:
     tongue_lookup = pickle.load(f)
 
 
