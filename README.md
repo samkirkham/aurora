@@ -1,10 +1,10 @@
-# Resonance
+# AURORA
 
-Real-time spectral feedback application for acoustic analysis and biofeedback.
+AURORA: Acoustic Understanding and Real-time Observation of Resonant Articulations
 
 ## Description
 
-Resonance provides real-time visualization of spectral features with formant tracking and tongue shape modeling. The application captures audio input, performs spectral analysis, and displays resonance patterns in real-time.
+AURORA provides real-time visualization of spectral features with formant tracking and tongue shape modeling. The application captures audio input, performs spectral analysis, and displays resonance patterns in real-time.
 
 ## Requirements
 
@@ -21,7 +21,7 @@ If you don't have Poetry installed, follow the installation instructions at [htt
 
 ```bash
 # Navigate to the top-level directory
-cd Resonance
+cd aurora
 
 # Install dependencies
 poetry install
@@ -36,7 +36,7 @@ poetry shell
 Run the main application:
 
 ```bash
-python Resonance/Resonance.py
+python aurora/aurora.py
 ```
 
 Or run the test scripts:

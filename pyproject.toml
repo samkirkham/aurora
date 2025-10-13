@@ -1,9 +1,9 @@
 [project]
-name = "resonance"
+name = "aurora"
 version = "0.1.0"
 description = ""
 authors = [
-    {name = "Sam Kirkham",email = "s.d.kirkham@gmail.com"}
+    {name = "Sam Kirkham",email = "s.kirkham@lancaster.ac.uk"}
 ]
 readme = "README.md"
 requires-python = ">=3.12"
@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [tool.poetry]
-packages = [{include = "resonance", from = "src"}]
+packages = [{include = "aurora", from = "src"}]
 
 
 [build-system]
