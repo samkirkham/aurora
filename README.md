@@ -4,7 +4,10 @@ AURORA: Acoustic Understanding and Real-time Observation of Resonant Articulatio
 
 ## Description
 
-AURORA provides real-time visualization of spectral features with formant tracking and (preliminary) tongue shape estimation. The application captures audio input, performs spectral analysis, and displays spectral peaks and predicted tongue shape in real-time.
+AURORA provides real-time visualization of spectral features with formant tracking and (preliminary) tongue shape estimation. The application captures audio input, performs spectral analysis, and displays spectral peaks and predicted tongue shape in real-time. An example screenshot of the GUI is shown below:
+
+![AURORA Screenshot](img/gui.png)
+
 
 ## Requirements
 
