@@ -42,15 +42,6 @@ Run the main application:
 python aurora/aurora.py
 ```
 
-Or run the test scripts:
-
-```bash
-# Basic test
-python tests/Resonance_basic.py
-
-# Audio-only test
-python tests/Resonance_audio_only.py
-```
 
 ## Dependencies
 
