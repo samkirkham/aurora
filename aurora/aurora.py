@@ -28,7 +28,7 @@ import pickle
 Load pre-computed formants-to-tongue shape lookup dictionary from file (created by aurora/build_model.py)
 """
 
-with open("aurora/tongue_model.pkl", "rb") as f:
+with open("data/tongue_model.pkl", "rb") as f:
     tongue_lookup = pickle.load(f)
 
 
