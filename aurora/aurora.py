@@ -32,6 +32,20 @@ with open("data/tongue_model.pkl", "rb") as f:
     tongue_lookup = pickle.load(f)
 
 
+def load_anatomical_boundaries():
+    """Load static anatomical boundaries from template file."""
+    template = np.load("data/aurora_template.npz", allow_pickle=True)
+    contours = template["contours"].item()
+    return {
+        "palate": (contours["palate"][:, 0], contours["palate"][:, 1]),
+        "pharyngeal_wall": (contours["pharyngeal_wall"][:, 0], contours["pharyngeal_wall"][:, 1]),
+        "jaw": (contours["jaw"][:, 0], contours["jaw"][:, 1]),
+    }
+
+
+anatomical_boundaries = load_anatomical_boundaries()
+
+
 """
 Default parameters
 """
@@ -116,6 +130,28 @@ tongue_fill = pg.FillBetweenItem(
     brush=pg.mkBrush(255, 182, 193, 200)
 )
 tongue_plot.addItem(tongue_fill)
+
+# Anatomical boundaries (static, loaded from template)
+palate_curve = pg.PlotCurveItem(
+    anatomical_boundaries["palate"][0],
+    anatomical_boundaries["palate"][1],
+    pen=pg.mkPen((139, 69, 19), width=2),  # Brown
+)
+tongue_plot.addItem(palate_curve)
+
+pharynx_curve = pg.PlotCurveItem(
+    anatomical_boundaries["pharyngeal_wall"][0],
+    anatomical_boundaries["pharyngeal_wall"][1],
+    pen=pg.mkPen((139, 69, 19), width=2),  # Brown
+)
+tongue_plot.addItem(pharynx_curve)
+
+jaw_curve = pg.PlotCurveItem(
+    anatomical_boundaries["jaw"][0],
+    anatomical_boundaries["jaw"][1],
+    pen=pg.mkPen((139, 69, 19), width=2),  # Brown
+)
+tongue_plot.addItem(jaw_curve)
 
 
 def create_sublingual_floor(x_dorsum, y_dorsum):
