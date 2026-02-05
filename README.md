@@ -12,13 +12,13 @@ AURORA provides real-time visualization of spectral features with formant tracki
 ## Requirements
 
 - Python 3.12 or higher
-- Poetry (for dependency management)
+- uv (for dependency management)
 
 ## Installation
 
-### 1. Install Poetry
+### 1. Install uv
 
-If you don't have Poetry installed, follow the installation instructions at [https://python-poetry.org/docs/#installation](https://python-poetry.org/docs/#installation).
+If you don't have uv installed, follow the installation instructions at [https://docs.astral.sh/uv/getting-started/installation/](https://docs.astral.sh/uv/getting-started/installation/).
 
 ### 2. Clone and Setup
 
@@ -27,10 +27,7 @@ If you don't have Poetry installed, follow the installation instructions at [htt
 cd aurora
 
 # Install dependencies
-poetry install
-
-# Activate the virtual environment
-poetry shell
+uv sync
 ```
 
 
@@ -39,7 +36,7 @@ poetry shell
 Run the main application:
 
 ```bash
-python aurora/aurora.py
+uv run python aurora/aurora.py
 ```
 
 
