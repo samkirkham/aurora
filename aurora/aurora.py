@@ -165,7 +165,7 @@ controls_layout = QtWidgets.QVBoxLayout(controls)
 # Add collapsible toggle button
 toggle_btn = QtWidgets.QPushButton("Show Controls")
 toggle_btn.setFixedHeight(30)  # Smaller height
-toggle_btn.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+toggle_btn.setSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
 
 
 def toggle_controls():
@@ -225,7 +225,7 @@ formant_checkbox_widget.setLayout(formant_checkbox_layout)
 
 
 def update_highlight(index, state):
-    highlighted_formants[index] = state == QtCore.Qt.Checked
+    highlighted_formants[index] = state == QtCore.Qt.CheckState.Checked
 
 
 for i, label in enumerate(highlight_labels):
@@ -389,4 +389,4 @@ Run via command line
 
 if __name__ == "__main__":
     if (sys.flags.interactive != 1) or not hasattr(QtCore, "PYQT_VERSION"):
-        QtWidgets.QApplication.instance().exec_()
+        QtWidgets.QApplication.instance().exec()
