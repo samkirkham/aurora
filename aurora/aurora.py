@@ -102,7 +102,38 @@ tongue_plot.setAspectLocked(
     True
 )  # False allows you to reorient the window better, but not ideal!
 tongue_plot.setMouseEnabled(x=False, y=False)
-tongue_curve = tongue_plot.plot(pen=pg.mkPen("black", width=7))
+
+# Create curves for dorsum (top) and floor (bottom) - used for FillBetweenItem
+tongue_dorsum_curve = pg.PlotCurveItem(pen=pg.mkPen("black", width=3))
+tongue_floor_curve = pg.PlotCurveItem(pen=pg.mkPen(None))  # Invisible floor line
+tongue_plot.addItem(tongue_dorsum_curve)
+tongue_plot.addItem(tongue_floor_curve)
+
+# Fill between dorsum and floor
+tongue_fill = pg.FillBetweenItem(
+    tongue_dorsum_curve,
+    tongue_floor_curve,
+    brush=pg.mkBrush(255, 182, 193, 200)
+)
+tongue_plot.addItem(tongue_fill)
+
+
+def create_sublingual_floor(x_dorsum, y_dorsum):
+    """Create anatomically-shaped sublingual floor curve matching dorsum x-coords"""
+    # Get tip and back positions
+    x_tip, y_tip = x_dorsum[0], y_dorsum[0]
+    x_back, y_back = x_dorsum[-1], y_dorsum[-1]
+
+    # Use same x coordinates as dorsum for proper fill alignment
+    t = np.linspace(0, 1, len(x_dorsum))
+
+    # Y coordinates: curved floor with dip in anterior-middle region
+    base_y = y_tip + t * (y_back - y_tip)  # Linear baseline between endpoints
+    # Asymmetric dip - deeper toward the front, shallower at back
+    dip = 20 * np.sin(np.pi * t) * (1 - 0.5 * t)
+    y_floor = base_y - dip
+
+    return x_dorsum, y_floor
 
 
 def update_tongue(formant_freqs):
@@ -111,7 +142,15 @@ def update_tongue(formant_freqs):
     f2_rounded = int(round(formant_freqs[1] / 10.0) * 10)
     tongue_points = tongue_lookup.get((f1_rounded, f2_rounded))  # lookup from dict
     if tongue_points is not None:
-        tongue_curve.setData(-tongue_points[:, 0], tongue_points[:, 1])
+        x_dorsum = -tongue_points[:, 0]
+        y_dorsum = tongue_points[:, 1]
+
+        # Create sublingual floor with same x-coords as dorsum
+        x_floor, y_floor = create_sublingual_floor(x_dorsum, y_dorsum)
+
+        # Update both curves - FillBetweenItem updates automatically
+        tongue_dorsum_curve.setData(x_dorsum, y_dorsum)
+        tongue_floor_curve.setData(x_floor, y_floor)
 
 
 """
