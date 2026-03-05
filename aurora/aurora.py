@@ -272,6 +272,24 @@ for i, label in enumerate(highlight_labels):
 
 
 """
+Toggle contour visibility
+"""
+
+contour_checkbox = QtWidgets.QCheckBox("Show Contours")
+contour_checkbox.setChecked(True)
+
+
+def toggle_contours():
+    visible = contour_checkbox.isChecked()
+    palate_curve.setVisible(visible)
+    pharynx_curve.setVisible(visible)
+    jaw_curve.setVisible(visible)
+
+
+contour_checkbox.toggled.connect(toggle_contours)
+
+
+"""
 Select audio interface
 """
 
@@ -324,6 +342,7 @@ controls_group_layout.addRow("Frame Size", frame_box)
 controls_group_layout.addRow("LPC Order", lpc_box)
 controls_group_layout.addRow("Threshold", threshold_box)
 controls_group_layout.addRow("Highlight:", formant_checkbox_widget)
+controls_group_layout.addRow("Contours:", contour_checkbox)
 
 
 """
