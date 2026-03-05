@@ -3,3 +3,5 @@ tests/
 build/
 .venv/
 __pycache__/
+
+NOTES.md
