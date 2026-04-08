@@ -412,29 +412,49 @@ def update_spectrum(spectrum, formant_freqs):
             formant_lines[i].setVisible(False)
 
 
+def extract_formants_from_roots(a, fs, max_formants=4, max_bandwidth=500):
+    """Extract formant frequencies from LPC polynomial roots.
+
+    Formants correspond to complex conjugate pole pairs near the unit circle.
+    This is more robust than peak-picking on the magnitude spectrum.
+    """
+    roots = np.roots(a)
+    # Keep roots inside the unit circle with positive imaginary part (upper half-plane)
+    roots = roots[np.imag(roots) >= 0]
+    roots = roots[np.abs(roots) < 1.0]
+    if len(roots) == 0:
+        return np.array([])
+    # Convert to frequency and bandwidth
+    angles = np.angle(roots)
+    freqs = angles * (fs / (2 * np.pi))
+    bandwidths = -0.5 * (fs / (2 * np.pi)) * np.log(np.abs(roots))
+    # Keep only plausible formants: positive frequency, reasonable bandwidth
+    mask = (freqs > 90) & (freqs < fs / 2 - 50) & (bandwidths < max_bandwidth)
+    freqs = freqs[mask]
+    freqs = np.sort(freqs)[:max_formants]
+    return freqs
+
+
 def process_audio(indata, frames, time, status):
     try:
         audio_buffer.extend(indata[:, 0])
         if len(audio_buffer) == params["frame_size"]:
             frame = np.array(audio_buffer)
             rms = np.sqrt(np.mean(frame**2))  # get rms in frame
-            if rms < params["rms_threshold"]:  # # check if audio is above RMS threshold
+            if rms < params["rms_threshold"]:  # check if audio is above RMS threshold
                 return  # if below threshold, do nothing
             else:
+                # Pre-emphasis to flatten spectral tilt (~6 dB/oct)
+                frame = np.append(frame[0], frame[1:] - 0.97 * frame[:-1])
                 frame *= np.hamming(len(frame))
                 a = librosa.lpc(y=frame, order=params["lpc_order"])  # LPC coefficients
                 w, h = scipy.signal.freqz(
                     [1], a, worN=params["frame_size"] // 2, fs=params["fs"]
                 )  # freq response
                 spectrum = 20 * np.log10(np.abs(h) + 1e-10)  # spectrum
-                # Find formant peaks (higher distance = less sensitive to small bumps)
-                peaks, properties = scipy.signal.find_peaks(
-                    spectrum, height=-40, distance=20
-                )
-                formant_freqs = freq_axis[peaks]
-                formant_freqs = np.sort(formant_freqs)[
-                    :4
-                ]  # sort by freq. + return 4 fms
+
+                # Extract formants from LPC roots (more accurate than peak-picking)
+                formant_freqs = extract_formants_from_roots(a, params["fs"])
 
                 # update spectrum + tongue plots
                 update_spectrum(spectrum, formant_freqs)
