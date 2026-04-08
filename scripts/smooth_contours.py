@@ -24,10 +24,12 @@ SMOOTH_PARAMS = {
 def smooth_contour(pts, sigma):
     """Smooth a (N, 2) contour with a 1D Gaussian filter on each axis.
 
-    Uses 'nearest' boundary mode to avoid shrinking the endpoints.
+    Pins the first and last points to their original positions.
     """
     x_smooth = gaussian_filter1d(pts[:, 0], sigma=sigma, mode="nearest")
     y_smooth = gaussian_filter1d(pts[:, 1], sigma=sigma, mode="nearest")
+    x_smooth[0], y_smooth[0] = pts[0, 0], pts[0, 1]
+    x_smooth[-1], y_smooth[-1] = pts[-1, 0], pts[-1, 1]
     return np.column_stack([x_smooth, y_smooth])
 
 
