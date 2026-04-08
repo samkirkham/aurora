@@ -40,22 +40,6 @@ uv run python aurora/aurora.py
 ```
 
 
-## Dependencies
-
-- **numpy**: Numerical computing
-- **sounddevice**: Real-time audio I/O
-- **scipy**: Scientific computing (signal processing)
-- **librosa**: Audio analysis
-- **pyqtgraph**: Real-time plotting and GUI
-- **polars**: Data manipulation (used in model building)
-
-## Features
-
-- Real-time audio capture and analysis
-- Formant tracking using LPC analysis
-- Tongue shape modeling and visualization
-- Configurable parameters (sampling rate, frame size, LPC order)
-- GUI interface with interactive plots
 
 ## Configuration
 
