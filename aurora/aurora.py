@@ -165,21 +165,21 @@ tongue_plot.addItem(tongue_fill)
 palate_curve = pg.PlotCurveItem(
     anatomical_boundaries["palate"][0],
     anatomical_boundaries["palate"][1],
-    pen=pg.mkPen((139, 69, 19), width=2),  # Brown
+    pen=pg.mkPen((80, 80, 80), width=4),
 )
 tongue_plot.addItem(palate_curve)
 
 pharynx_curve = pg.PlotCurveItem(
     anatomical_boundaries["pharyngeal_wall"][0],
     anatomical_boundaries["pharyngeal_wall"][1],
-    pen=pg.mkPen((139, 69, 19), width=2),  # Brown
+    pen=pg.mkPen((80, 80, 80), width=4),
 )
 tongue_plot.addItem(pharynx_curve)
 
 jaw_curve = pg.PlotCurveItem(
     anatomical_boundaries["jaw"][0],
     anatomical_boundaries["jaw"][1],
-    pen=pg.mkPen((139, 69, 19), width=2),  # Brown
+    pen=pg.mkPen((80, 80, 80), width=4),
 )
 tongue_plot.addItem(jaw_curve)
 
