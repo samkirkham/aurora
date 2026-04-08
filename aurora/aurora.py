@@ -291,7 +291,7 @@ formant_checkbox_widget.setLayout(formant_checkbox_layout)
 
 
 def update_highlight(index, state):
-    highlighted_formants[index] = state == QtCore.Qt.CheckState.Checked
+    highlighted_formants[index] = bool(state)
 
 
 for i, label in enumerate(highlight_labels):
