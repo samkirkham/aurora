@@ -59,12 +59,22 @@ uv run python aurora/aurora.py
 
 ## Configuration
 
-Default parameters can be modified in the main script:
+The `config.yaml` file allows you to select between different models, rotate the position of the static vocal tract contours, and set different default acoustic settings. The defaults are:
 
-- `fs`: Sampling rate (default: 10000 Hz)
-- `frame_size`: Analysis frame size (default: 1024)
-- `lpc_order`: LPC analysis order (default: 12)
-- `rms_threshold`: RMS threshold for processing (default: 0.03)
+```
+audio:
+  fs: 10000                 # sampling rate
+  frame_size: 1024          # frame size
+  lpc_order: 12             # tune LPC order for speaker-specific formant tracking 
+  rms_threshold: 0.03       # only track acoustic input above threshold
+
+data:
+  tongue_model: data/tongue_model.pkl   # model for formant-tongue inversion
+  template: data/aurora_template.npz    # template for static vocal tract contours
+
+contours:
+  rotation_deg: 0.0          # angle to rotate static contours (in degrees)
+```
 
 ## Author
 
