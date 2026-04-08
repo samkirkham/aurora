@@ -23,23 +23,53 @@ from pyqtgraph.Qt import QtWidgets, QtCore
 from collections import deque
 import sys
 import pickle
+import yaml
+from pathlib import Path
+
+"""
+Load config
+"""
+
+PROJECT_ROOT = Path(__file__).parent.parent
+with open(PROJECT_ROOT / "config.yaml") as f:
+    config = yaml.safe_load(f)
+
 
 """
 Load pre-computed formants-to-tongue shape lookup dictionary from file (created by aurora/build_model.py)
 """
 
-with open("data/tongue_model.pkl", "rb") as f:
+with open(PROJECT_ROOT / config["data"]["tongue_model"], "rb") as f:
     tongue_lookup = pickle.load(f)
+
+
+def rotate_points(pts, angle_deg, centre):
+    """Rotate (N, 2) points around centre by angle_deg degrees."""
+    theta = np.radians(angle_deg)
+    c, s = np.cos(theta), np.sin(theta)
+    R = np.array([[c, -s], [s, c]])
+    return (pts - centre) @ R.T + centre
 
 
 def load_anatomical_boundaries():
     """Load static anatomical boundaries from template file."""
-    template = np.load("data/aurora_template.npz", allow_pickle=True)
+    template = np.load(
+        PROJECT_ROOT / config["data"]["template"], allow_pickle=True
+    )
     contours = template["contours"].item()
+
+    rotation = config["contours"]["rotation_deg"]
+    names = ["palate", "pharyngeal_wall", "jaw"]
+
+    if rotation != 0.0:
+        # Rotate all contours around their shared centroid
+        all_pts = np.vstack([contours[n] for n in names])
+        centre = all_pts.mean(axis=0)
+        for n in names:
+            contours[n] = rotate_points(contours[n], rotation, centre)
+
     return {
-        "palate": (contours["palate"][:, 0], contours["palate"][:, 1]),
-        "pharyngeal_wall": (contours["pharyngeal_wall"][:, 0], contours["pharyngeal_wall"][:, 1]),
-        "jaw": (contours["jaw"][:, 0], contours["jaw"][:, 1]),
+        n: (contours[n][:, 0], contours[n][:, 1]) for n in names
     }
 
 
@@ -47,14 +77,14 @@ anatomical_boundaries = load_anatomical_boundaries()
 
 
 """
-Default parameters
+Default parameters (from config, overridable via GUI)
 """
 
 params = {
-    "fs": 10000,  # fs = 10000 is ok
-    "frame_size": 1024,  # 1024 is pretty good (2048 quite slow, 512 too jittery and rapid)
-    "lpc_order": 12,  # will need changing (if 10,000 Hz then 8-10 F, 10-12 M)
-    "rms_threshold": 0.03,
+    "fs": config["audio"]["fs"],
+    "frame_size": config["audio"]["frame_size"],
+    "lpc_order": config["audio"]["lpc_order"],
+    "rms_threshold": config["audio"]["rms_threshold"],
 }
 
 

@@ -1,0 +1,12 @@
+audio:
+  fs: 10000
+  frame_size: 1024
+  lpc_order: 12
+  rms_threshold: 0.03
+
+data:
+  tongue_model: data/tongue_model.pkl
+  template: data/aurora_template.npz
+
+contours:
+  rotation_deg: 0.0  # rotation angle (degrees) applied to all static contours
